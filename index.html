@@ -123,18 +123,22 @@
     </div>
 
     <script>
-        // Inicializa la API de Telegram Web Apps
+        // Inicializa la API de Telegram Web App
         const tg = window.Telegram.WebApp;
 
         // Detecta al usuario usando la Web App API
+        tg.ready();  // Asegúrate de que la API esté lista
+
         const user = tg.initDataUnsafe.user;  // Obtén el objeto 'user' del API de Telegram
         console.log(user);  // Muestra la información del usuario en la consola para que lo veas
 
         // Obtén el userId del objeto 'user'
         const userId = user.id;
+        console.log("userId:", userId);  // Verifica que userId esté correctamente obteniendo
 
         // Reemplaza "TU_BLOCK_ID" con el BlockID que te dio AdsGram
         const blockId = "TU_BLOCK_ID";  // Ejemplo de BlockID (puedes poner el que AdsGram te haya dado)
+        console.log("blockId:", blockId);  // Verifica que blockId esté correctamente obteniendo
 
         // Función para abrir los anuncios
         document.getElementById('verAnuncioBtn').addEventListener('click', function() {
