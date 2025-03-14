@@ -105,7 +105,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="balance">🔹 <span class="coin">1,101</span> Silver</div>
+        <div class="balance">🔹 <span class="coin" id="coinBalance">1,101</span> Silver</div>
         <div class="status">Nivel: <strong>Silver</strong></div>
 
         <div class="circle">
@@ -147,7 +147,18 @@
 
         // Función para ver anuncios (integra AdsGram)
         function verAnuncio(userId) {
+            console.log("Intentando abrir anuncios con userId: " + userId + " y blockId: " + blockId);
             window.open(`https://adsgram.com/ads?userId=${userId}&blockId=${blockId}`, "_blank");
+
+            // Aquí puedes actualizar las monedas si AdsGram proporciona alguna respuesta de ganancias
+            actualizarBalance(10);  // Supongamos que el clic en el anuncio te da 10 monedas
+        }
+
+        // Función para actualizar el balance de monedas
+        function actualizarBalance(ganancias) {
+            let balance = parseInt(document.getElementById('coinBalance').innerText);
+            balance += ganancias;  // Sumar las ganancias a las monedas actuales
+            document.getElementById('coinBalance').innerText = balance;  // Actualizar el balance en la interfaz
         }
 
         // Función para abrir el wallet
