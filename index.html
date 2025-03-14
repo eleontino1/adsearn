@@ -133,6 +133,9 @@
         // Obtén el userId del objeto 'user'
         const userId = user.id;
 
+        // Reemplaza "TU_BLOCK_ID" con el BlockID que te dio AdsGram
+        const blockId = "TU_BLOCK_ID";  // Ejemplo de BlockID (puedes poner el que AdsGram te haya dado)
+
         // Función para abrir los anuncios
         document.getElementById('verAnuncioBtn').addEventListener('click', function() {
             verAnuncio(userId);  // Pasa el userId cuando el usuario haga clic
@@ -140,10 +143,7 @@
 
         // Función para ver anuncios (integra AdsGram)
         function verAnuncio(userId) {
-            const blockId = "8941";  // Aquí debes poner el BlockID de AdsGram
-
-            // Redirige al usuario a AdsGram con los parámetros necesarios
-            window.open(`https://adsgram.com?userId=${userId}&blockId=${blockId}`, "_blank");
+            window.open(`https://adsgram.com/ads?userId=${userId}&blockId=${blockId}`, "_blank");
         }
 
         // Función para abrir el wallet
