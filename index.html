@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://github.com https://cdn-icons-png.flaticon.com; frame-ancestors 'self' https://github.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://web.telegram.org; style-src 'self' 'unsafe-inline';">
     <title>Mini App AdsGram</title>
     <script async src="https://web.telegram.org/js/telegram-web-app.js"></script> <!-- Cargar la API de Telegram -->
     <style>
@@ -124,20 +124,13 @@
     </div>
 
     <script>
-        // Asegurarse de que la API de Telegram esté completamente cargada
         window.onload = function() {
-            const tg = window.Telegram.WebApp;
-            
-            // Verifica que tg esté definido correctamente
-            if (!tg) {
-                console.error("Telegram WebApp API no cargó correctamente.");
-                return;
-            }
-
             // Inicializa la API de Telegram Web App
+            const tg = window.Telegram.WebApp;
             tg.ready();  // Asegúrate de que la API esté lista
 
-            const user = tg.initDataUnsafe.user;  // Obtén el objeto 'user' del API de Telegram
+            // Detecta al usuario usando la Web App API
+            const user = tg.initDataUnsafe.user;
             console.log(user);  // Muestra la información del usuario en la consola para que lo veas
 
             // Obtén el userId del objeto 'user'
@@ -145,18 +138,18 @@
             console.log("userId:", userId);  // Verifica que userId esté correctamente obteniendo
 
             // Reemplaza "TU_BLOCK_ID" con el BlockID que te dio AdsGram
-            const blockId = "8941";  // Ejemplo de BlockID (puedes poner el que AdsGram te haya dado)
+            const blockId = "8941";  // Inserta el BlockID correcto de AdsGram
             console.log("blockId:", blockId);  // Verifica que blockId esté correctamente obteniendo
 
             // Función para abrir los anuncios
             document.getElementById('verAnuncioBtn').addEventListener('click', function() {
-                verAnuncio(userId);  // Pasa el userId cuando el usuario haga clic
+                verAnuncio(userId);
             });
 
             // Función para ver anuncios (integra AdsGram)
             function verAnuncio(userId) {
                 console.log("Intentando abrir anuncios con userId: " + userId + " y blockId: " + blockId);
-                window.open(`https://adsgram.com/ads?userId=${userId}&blockId=${blockId}`, "_blank");
+                window.location.href = `https://adsgram.com/ads?userId=${userId}&blockId=${blockId}`;
 
                 // Aquí puedes actualizar las monedas si AdsGram proporciona alguna respuesta de ganancias
                 actualizarBalance(10);  // Supongamos que el clic en el anuncio te da 10 monedas
