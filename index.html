@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mini App AdsGram</title>
-    <script src="https://web.telegram.org/js/telegram-web-app.js"></script> <!-- Cargar la API de Telegram -->
+    <script async src="https://web.telegram.org/js/telegram-web-app.js"></script> <!-- Cargar la API de Telegram -->
     <style>
         * {
             margin: 0;
@@ -118,54 +118,52 @@
 
         <div class="buttons">
             <button class="btn btn-ad" id="verAnuncioBtn">👀 Ver Anuncio</button>
-            <button class="btn btn-wallet" onclick="abrirWallet()">💳 Wallet</button>
+            <button class="btn btn-wallet" id="walletBtn">💳 Wallet</button>
         </div>
     </div>
 
     <script>
-        // Esperar a que la API de Telegram esté lista
-        window.addEventListener('load', function() {
-            const tg = window.Telegram.WebApp;
+        // Inicializa la API de Telegram Web App
+        const tg = window.Telegram.WebApp;
 
-            if (tg) {
-                tg.ready();  // Asegúrate de que la API esté lista
-                const user = tg.initDataUnsafe.user;  // Obtén el objeto 'user' del API de Telegram
-                console.log(user);  // Muestra la información del usuario en la consola para que lo veas
+        // Detecta al usuario usando la Web App API
+        tg.ready();  // Asegúrate de que la API esté lista
 
-                const userId = user.id;  // Obtén el userId del objeto 'user'
-                console.log("userId:", userId);  // Verifica que userId esté correctamente obteniendo
+        const user = tg.initDataUnsafe.user;  // Obtén el objeto 'user' del API de Telegram
+        console.log(user);  // Muestra la información del usuario en la consola para que lo veas
 
-                const blockId = "8941";  // Ejemplo de BlockID (puedes poner el que AdsGram te haya dado)
-                console.log("blockId:", blockId);  // Verifica que blockId esté correctamente obteniendo
+        // Obtén el userId del objeto 'user'
+        const userId = user.id;
+        console.log("userId:", userId);  // Verifica que userId esté correctamente obteniendo
 
-                // Función para abrir los anuncios
-                document.getElementById('verAnuncioBtn').addEventListener('click', function() {
-                    verAnuncio(userId);  // Pasa el userId cuando el usuario haga clic
-                });
+        // Reemplaza "TU_BLOCK_ID" con el BlockID que te dio AdsGram
+        const blockId = "8941";  // Ejemplo de BlockID (puedes poner el que AdsGram te haya dado)
+        console.log("blockId:", blockId);  // Verifica que blockId esté correctamente obteniendo
 
-                // Función para ver anuncios (integra AdsGram)
-                function verAnuncio(userId) {
-                    console.log("Intentando abrir anuncios con userId: " + userId + " y blockId: " + blockId);
-                    window.open(`https://adsgram.com/ads?userId=${userId}&blockId=${blockId}`, "_blank");
+        // Función para abrir los anuncios
+        document.getElementById('verAnuncioBtn').addEventListener('click', function() {
+            verAnuncio(userId);  // Pasa el userId cuando el usuario haga clic
+        });
 
-                    // Aquí puedes actualizar las monedas si AdsGram proporciona alguna respuesta de ganancias
-                    actualizarBalance(10);  // Supongamos que el clic en el anuncio te da 10 monedas
-                }
+        // Función para ver anuncios (integra AdsGram)
+        function verAnuncio(userId) {
+            console.log("Intentando abrir anuncios con userId: " + userId + " y blockId: " + blockId);
+            window.open(`https://adsgram.com/ads?userId=${userId}&blockId=${blockId}`, "_blank");
 
-                // Función para actualizar el balance de monedas
-                function actualizarBalance(ganancias) {
-                    let balance = parseInt(document.getElementById('coinBalance').innerText);
-                    balance += ganancias;  // Sumar las ganancias a las monedas actuales
-                    document.getElementById('coinBalance').innerText = balance;  // Actualizar el balance en la interfaz
-                }
+            // Aquí puedes actualizar las monedas si AdsGram proporciona alguna respuesta de ganancias
+            actualizarBalance(10);  // Supongamos que el clic en el anuncio te da 10 monedas
+        }
 
-                // Función para abrir el wallet
-                function abrirWallet() {
-                    window.location.href = "wallet.html";  // Redirige a la página de wallet
-                }
-            } else {
-                console.error('Telegram Web App API no está disponible');
-            }
+        // Función para actualizar el balance de monedas
+        function actualizarBalance(ganancias) {
+            let balance = parseInt(document.getElementById('coinBalance').innerText);
+            balance += ganancias;  // Sumar las ganancias a las monedas actuales
+            document.getElementById('coinBalance').innerText = balance;  // Actualizar el balance en la interfaz
+        }
+
+        // Función para abrir el wallet
+        document.getElementById('walletBtn').addEventListener('click', function() {
+            window.location.href = "wallet.html";  // Redirige a la página de wallet
         });
     </script>
 </body>
