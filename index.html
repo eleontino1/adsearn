@@ -145,17 +145,16 @@
         const user = tg.initDataUnsafe.user;
         console.log("User:", user);
 
+        // Botón para mostrar el anuncio
         document.getElementById('verAnuncioBtn').addEventListener('click', function() {
           if (ads) {
-            ads.show_rewarded_ad({
-              onReward: () => {
-                console.log("¡El usuario ha visto el anuncio y ha ganado monedas!");
-                actualizarBalance(10);
-              },
-              onError: (error) => {
-                console.error("Error al mostrar el anuncio:", error);
-              }
+            // Mostrar el anuncio usando el adBlockUuid proporcionado
+            ads.ad_show({
+              adBlockUuid: "2047c10e-075f-42ae-8a37-9bcb837abb45"
             });
+
+            // Después de ver el anuncio, actualizar el balance
+            actualizarBalance(10);
           } else {
             console.warn("La API de Telega.io no está disponible.");
           }
@@ -164,10 +163,12 @@
         console.warn("La API de Telegram WebApp no está disponible.");
       }
 
+      // Event listener para el botón "Wallet"
       document.getElementById('walletBtn').addEventListener('click', function() {
         window.location.href = "wallet.html";
       });
 
+      // Función para actualizar el balance de monedas
       function actualizarBalance(ganancias) {
         let balance = parseInt(document.getElementById('coinBalance').innerText);
         balance += ganancias;
