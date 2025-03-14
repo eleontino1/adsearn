@@ -148,13 +148,17 @@
         // Botón para mostrar el anuncio
         document.getElementById('verAnuncioBtn').addEventListener('click', function() {
           if (ads) {
+            console.log("ads disponible:", ads);
             // Mostrar el anuncio usando el adBlockUuid proporcionado
             ads.ad_show({
               adBlockUuid: "2047c10e-075f-42ae-8a37-9bcb837abb45"
+            }).then(() => {
+              console.log("Anuncio mostrado correctamente.");
+              // Después de ver el anuncio, actualizar el balance
+              actualizarBalance(10);
+            }).catch((error) => {
+              console.error("Error al mostrar el anuncio:", error);
             });
-
-            // Después de ver el anuncio, actualizar el balance
-            actualizarBalance(10);
           } else {
             console.warn("La API de Telega.io no está disponible.");
           }
