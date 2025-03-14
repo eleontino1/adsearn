@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; frame-ancestors 'self' https://github.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://github.com https://cdn-icons-png.flaticon.com; frame-ancestors 'self' https://github.com;">
     <title>Mini App AdsGram</title>
     <script async src="https://web.telegram.org/js/telegram-web-app.js"></script> <!-- Cargar la API de Telegram -->
     <style>
@@ -138,7 +138,7 @@
         console.log("userId:", userId);  // Verifica que userId esté correctamente obteniendo
 
         // Reemplaza "TU_BLOCK_ID" con el BlockID que te dio AdsGram
-        const blockId = "8941";  // Ejemplo de BlockID (puedes poner el que AdsGram te haya dado)
+        const blockId = "TU_BLOCK_ID";  // Ejemplo de BlockID (puedes poner el que AdsGram te haya dado)
         console.log("blockId:", blockId);  // Verifica que blockId esté correctamente obteniendo
 
         // Función para abrir los anuncios
