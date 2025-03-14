@@ -2,9 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Wallet</title>
-    <script src="https://web.telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
             margin: 0;
@@ -32,69 +31,127 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
         .balance {
-            font-size: 18px;
+            font-size: 24px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         .coin {
             color: #ffcc00;
         }
-        .buttons {
+        .withdraw-form {
             display: flex;
-            justify-content: center;
-            margin-top: 15px;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
         }
-        .btn {
+        input {
             padding: 12px;
             font-size: 14px;
             border: none;
             border-radius: 10px;
-            margin: 0 5px;
+            background: #222;
+            color: white;
+            text-align: center;
+        }
+        input:focus {
+            outline: none;
+            border: 1px solid #00c6ff;
+        }
+        button {
+            padding: 12px;
+            font-size: 14px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #0072ff, #00c6ff);
+            color: white;
             cursor: pointer;
             font-weight: bold;
             transition: 0.3s;
+            margin-top: 15px;
         }
-        .btn-back {
-            background: linear-gradient(90deg, #444, #888);
-            color: white;
+        button:hover {
+            background: linear-gradient(90deg, #00c6ff, #0072ff);
         }
-        .btn-back:hover {
-            background: linear-gradient(90deg, #666, #aaa);
+        .message {
+            margin-top: 15px;
+        }
+        .error {
+            color: red;
+        }
+        .success {
+            color: #00c6ff;
         }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <div class="balance">🔹 <span class="coin" id="coinBalanceWallet">100</span> Silver</div>
-        <div class="buttons">
-            <button class="btn btn-back" onclick="volverAlInicio()">Volver a la mini app</button>
-        </div>
+        <div class="balance">🔹 <span class="coin" id="balance">0.00</span> USDT</div>
+
+        <h3>Retiro</h3>
+        <form class="withdraw-form" id="withdrawForm">
+            <label for="walletAddress">Dirección de Wallet:</label>
+            <input type="text" id="walletAddress" placeholder="Ingresa tu dirección de wallet" required>
+
+            <label for="withdrawAmount">Cantidad a retirar (USDT):</label>
+            <input type="number" id="withdrawAmount" placeholder="Cantidad a retirar" min="0.1" required>
+
+            <button type="submit">Cobrar</button>
+        </form>
+
+        <div class="message" id="message"></div>
+
+        <!-- Botón para regresar a index -->
+        <button id="backBtn" style="margin-top: 20px; background: linear-gradient(90deg, #444, #888);">Regresar a la app</button>
     </div>
 
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.ready();
+        const balanceElement = document.getElementById('balance');
+        const withdrawForm = document.getElementById('withdrawForm');
+        const messageElement = document.getElementById('message');
+        const backBtn = document.getElementById('backBtn');
 
-        const user = tg.initDataUnsafe.user;
-        console.log(user);
+        // Cargar saldo desde localStorage
+        let balance = parseFloat(localStorage.getItem("coinBalance")) || 0; // Saldo inicial de 0 si no existe en localStorage
+        balanceElement.innerText = balance.toFixed(2);
 
-        const userId = user.id;
-        console.log("userId:", userId);
+        withdrawForm.addEventListener('submit', function(event) {
+            event.preventDefault();
 
-        let saldoMonedas = 100;
+            const walletAddress = document.getElementById('walletAddress').value;
+            const withdrawAmount = parseFloat(document.getElementById('withdrawAmount').value);
 
-        // Actualiza el saldo en la interfaz de Wallet
-        function actualizarSaldo() {
-            document.getElementById('coinBalanceWallet').innerText = saldoMonedas;
-        }
+            // Limpiar mensaje previo
+            messageElement.innerHTML = '';
 
-        // Volver a la mini app
-        function volverAlInicio() {
-            window.location.href = "index.html";
-        }
+            if (!walletAddress) {
+                messageElement.innerHTML = "<p class='error'>Por favor, ingresa una dirección válida.</p>";
+                return;
+            }
 
-        // Inicializa el saldo en wallet
-        actualizarSaldo();
+            if (withdrawAmount <= 0 || withdrawAmount > balance) {
+                messageElement.innerHTML = "<p class='error'>La cantidad a retirar debe ser mayor que 0 y no exceder tu saldo.</p>";
+                return;
+            }
+
+            balance -= withdrawAmount;
+            balanceElement.innerText = balance.toFixed(2);
+
+            // Guardar el saldo actualizado en localStorage
+            localStorage.setItem("coinBalance", balance.toFixed(2));
+
+            messageElement.innerHTML = `<p class='success'>Retiro de ${withdrawAmount} TON realizado con éxito a la dirección: ${walletAddress}</p>`;
+
+            // Limpiar los campos del formulario
+            document.getElementById('walletAddress').value = '';
+            document.getElementById('withdrawAmount').value = '';
+        });
+
+        // Acción al hacer clic en "Regresar a la app"
+        backBtn.addEventListener('click', function() {
+            window.location.href = "index.html"; // Redirige de vuelta a la página principal
+        });
     </script>
+
 </body>
 </html>
