@@ -4,9 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mini App AdsGram</title>
-  <!-- Permitir cargar scripts desde Telegram y la imagen desde Flaticon -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://web.telegram.org; img-src 'self' https://cdn-icons-png.flaticon.com; style-src 'self' 'unsafe-inline';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://web.telegram.org https://inapp.telega.io; img-src 'self' https://cdn-icons-png.flaticon.com; style-src 'self' 'unsafe-inline';">
+  
   <script src="https://web.telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://inapp.telega.io/sdk/v1/sdk.js"></script>
+
   <style>
     * {
       margin: 0;
@@ -113,7 +115,6 @@
     <div class="status">Nivel: <strong>Silver</strong></div>
 
     <div class="circle">
-      <!-- Si la imagen externa sigue bloqueándose, descarga la imagen y colócala en "images/icono.png" -->
       <img src="https://cdn-icons-png.flaticon.com/512/3097/3097131.png" alt="Icono">
     </div>
 
@@ -128,46 +129,45 @@
   </div>
 
   <script>
+    let ads;
+
     window.addEventListener('load', function() {
-      // Verificar si la API de Telegram WebApp está disponible
+      if (window.TelegaIn) {
+        ads = window.TelegaIn.AdsController.create_miniapp({
+          token: '424ddedb-ae92-47ae-b78e-2c40a4d134d0'
+        });
+      }
+
       if (window.Telegram && window.Telegram.WebApp) {
         const tg = window.Telegram.WebApp;
-        tg.ready(); // Asegura que la API esté lista
+        tg.ready();
 
-        // Obtener la información del usuario
         const user = tg.initDataUnsafe.user;
         console.log("User:", user);
 
-        // Obtener el userId del usuario
-        const userId = user.id;
-        console.log("userId:", userId);
-
-        // Usa tu BlockID real: 8941
-        const blockId = "8941";
-        console.log("blockId:", blockId);
-
-        // Asigna event listener para "Ver Anuncio"
         document.getElementById('verAnuncioBtn').addEventListener('click', function() {
-          verAnuncio(userId);
+          if (ads) {
+            ads.show_rewarded_ad({
+              onReward: () => {
+                console.log("¡El usuario ha visto el anuncio y ha ganado monedas!");
+                actualizarBalance(10);
+              },
+              onError: (error) => {
+                console.error("Error al mostrar el anuncio:", error);
+              }
+            });
+          } else {
+            console.warn("La API de Telega.io no está disponible.");
+          }
         });
-
-        // Función para abrir anuncios usando la función recomendada por Telegram
-        function verAnuncio(userId) {
-          const url = `https://adsgram.com/ads?userId=${userId}&blockId=${blockId}`;
-          console.log("Abriendo anuncio en:", url);
-          tg.openLink(url); // Abre el enlace usando la API de Telegram
-          actualizarBalance(10); // Ejemplo: cada anuncio suma 10 monedas
-        }
       } else {
-        console.warn("La API de Telegram WebApp no está disponible. Prueba la mini app dentro de Telegram.");
+        console.warn("La API de Telegram WebApp no está disponible.");
       }
 
-      // Event listener para el botón "Wallet"
       document.getElementById('walletBtn').addEventListener('click', function() {
         window.location.href = "wallet.html";
       });
 
-      // Función para actualizar el balance de monedas
       function actualizarBalance(ganancias) {
         let balance = parseInt(document.getElementById('coinBalance').innerText);
         balance += ganancias;
